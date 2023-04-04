@@ -6,6 +6,46 @@
     <title>Unity WebGL Player | ManRun</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
+
+    <script>
+
+      function FromUnityToJs ()   // функция вызывается из Unity
+      {
+        callMethodWallPost();
+      }
+
+      function callMethodWallPost() // вызываем метод ВК
+         {
+            vkBridge.send('VKWebAppShowWallPostBox', {
+              message: 'Первая запись на стене!'
+              })
+              .then((data) => {
+                if (data.post_id) {
+                  // Запись размещена
+                  console.log ("ok");
+                }
+              })
+              .catch((error) => {
+                // Ошибка
+                console.log(error);
+              });
+         }
+
+      var unityInstance = UnityLoader.instantiate("unityContainer", "Build/Lesson_build.json", {onProgress: UnityProgress}); // запуск unity на странице
+
+
+      jQuery(document).ready(function($) // страница прогружена
+      {
+        vkBridge.send('VKWebAppInit');
+
+      });
+
+    </script>
+
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
@@ -57,11 +97,11 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/VK_Test_WEBGL_Project.loader.js";
+      var loaderUrl = buildUrl + "/VKTest.loader.js";
       var config = {
-        dataUrl: buildUrl + "/VK_Test_WEBGL_Project.data.unityweb",
-        frameworkUrl: buildUrl + "/VK_Test_WEBGL_Project.framework.js.unityweb",
-        codeUrl: buildUrl + "/VK_Test_WEBGL_Project.wasm.unityweb",
+        dataUrl: buildUrl + "/VKTest.data.unityweb",
+        frameworkUrl: buildUrl + "/VKTest.framework.js.unityweb",
+        codeUrl: buildUrl + "/VKTest.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "fanil",
         productName: "ManRun",
